@@ -54,6 +54,7 @@ function Sortable(props: { children: ReactNode; id: string }) {
       {...attributes}
       {...listeners}
       style={{
+        touchAction: "none",
         background: backgroundForId(props.id),
         transformOrigin: "bottom",
         transitionDuration: isSorting ? "100ms" : undefined,
@@ -63,20 +64,21 @@ function Sortable(props: { children: ReactNode; id: string }) {
           : undefined,
         ...(isDragging
           ? {
-            filter: over ? "opacity(0)" : undefined,
-            transform: "scale(0.95)",
-            "--lightness": "60%",
-          }
+              filter: over ? "opacity(0)" : undefined,
+              transform: "scale(0.95)",
+              "--lightness": "60%",
+            }
           : index !== newIndex
-            ? {
-              transform: `scale(0.85) ${newIndex < index
+          ? {
+              transform: `scale(0.85) ${
+                newIndex < index
                   ? "translateX(-100%) rotate(-5deg)"
                   : "translateX(100%) rotate(5deg)"
-                }`,
+              }`,
               opacity: "0.8",
               "--lightness": "30%",
             }
-            : null),
+          : null),
       }}
     >
       {props.children}
@@ -125,8 +127,8 @@ function App() {
           }}
         >
           {(width, height) => {
-            const cellWidth = 200;
-            const cellHeight = 300;
+            const [cellWidth, cellHeight] =
+              width < 768 ? [100, 150] : [200, 300];
             const columns = Math.floor(width / cellWidth);
             const rows = columns ? Math.ceil(items.length / columns) : 0;
             return (
